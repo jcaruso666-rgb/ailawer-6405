@@ -67,3 +67,11 @@ export const osintSearches = sqliteTable("osint_searches", {
   results: text("results").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
 });
+
+export const couponCodes = sqliteTable("coupon_codes", {
+  code: text("code").primaryKey(),
+  used: integer("used", { mode: "boolean" }).notNull().default(false),
+  usedBy: text("used_by"),
+  usedAt: integer("used_at", { mode: "timestamp" }),
+  planGranted: text("plan_granted").notNull().default("lifetime_free"),
+});

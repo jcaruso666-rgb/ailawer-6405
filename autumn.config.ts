@@ -1,6 +1,5 @@
 import { feature, product, featureItem, priceItem } from "atmn";
 
-// Features
 export const all_features = feature({
   id: "all_features",
   name: "All Features Included",
@@ -13,10 +12,9 @@ export const unlimited_usage = feature({
   type: "boolean",
 });
 
-// Single Plan - $100/month with everything
-export const proPlan = product({
-  id: "pro",
-  name: "AI Lawyer Pro",
+export const monthlyPlan = product({
+  id: "monthly",
+  name: "Monthly Plan",
   is_default: false,
   items: [
     priceItem({
@@ -32,8 +30,44 @@ export const proPlan = product({
   ],
 });
 
+export const yearlyPlan = product({
+  id: "yearly",
+  name: "Yearly Plan",
+  is_default: false,
+  items: [
+    priceItem({
+      price: 500,
+      interval: "year",
+    }),
+    featureItem({
+      feature_id: all_features.id,
+    }),
+    featureItem({
+      feature_id: unlimited_usage.id,
+    }),
+  ],
+});
+
+export const lifetimePlan = product({
+  id: "lifetime",
+  name: "Lifetime Plan",
+  is_default: false,
+  items: [
+    priceItem({
+      price: 1000,
+      interval: "year",
+    }),
+    featureItem({
+      feature_id: all_features.id,
+    }),
+    featureItem({
+      feature_id: unlimited_usage.id,
+    }),
+  ],
+});
+
 export default {
-  products: [proPlan],
+  products: [monthlyPlan, yearlyPlan, lifetimePlan],
   features: [all_features, unlimited_usage],
 };
 

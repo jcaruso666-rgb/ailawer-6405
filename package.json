@@ -61,6 +61,7 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.13.12",
     "@eslint/js": "^9.37.0",
+    "@libsql/client": "^0.15.15",
     "@tailwindcss/postcss": "^4.1.14",
     "@types/node": "^24.7.2",
     "@types/react": "^19.2.2",
