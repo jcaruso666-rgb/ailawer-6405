@@ -38,45 +38,61 @@ export default function Documents() {
     if (!title.trim() || !details.trim()) return;
 
     setIsGenerating(true);
-    setTimeout(() => {
-      setGeneratedDocument(`
-LEGAL DOCUMENT: ${documentTypes.find(t => t.value === documentType)?.label.toUpperCase()}
+    
+    try {
+      const docType = documentTypes.find(t => t.value === documentType)?.label || 'Document';
+      
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{
+            role: 'user',
+            content: `Draft a professional ${docType} with the following details:
 
 Title: ${title}
 
-[This is a professionally drafted ${documentTypes.find(t => t.value === documentType)?.label} based on your specifications]
+Details: ${details}
 
-PARTIES:
-Party A: [TO BE COMPLETED]
-Party B: [TO BE COMPLETED]
+Please provide a complete, legally-formatted ${docType} that is ready to use. Include all standard clauses, proper legal language, signature blocks, and formatting. Make it comprehensive and professional.`
+          }],
+          model: 'gpt-5-nano'
+        })
+      });
 
-WHEREAS, the parties agree to the following terms and conditions:
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
 
-1. SCOPE AND PURPOSE
-   ${details}
-
-2. TERMS AND CONDITIONS
-   The parties hereby agree to be bound by the terms set forth in this document.
-
-3. DURATION
-   This agreement shall remain in effect from the date of signing.
-
-4. GOVERNING LAW
-   This agreement shall be governed by applicable state and federal law.
-
-5. SIGNATURES
-   Both parties acknowledge and agree to the terms stated herein.
-
-_____________________          Date: _____________
-Party A Signature
-
-_____________________          Date: _____________
-Party B Signature
-
-[This is a draft document. Please review and customize as needed.]
-      `);
-      setIsGenerating(false);
-    }, 2000);
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+          
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                if (data.type === 'text-delta' && data.delta) {
+                  fullText += data.delta;
+                  setGeneratedDocument(fullText);
+                }
+              } catch (e) {
+                // Skip invalid JSON
+              }
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error generating document:', error);
+      setGeneratedDocument('Error generating document. Please try again.');
+    }
+    
+    setIsGenerating(false);
   };
 
   const downloadDocument = () => {

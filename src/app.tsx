@@ -14,6 +14,8 @@ import OSINT from "@/pages/osint";
 import SelfRep from "@/pages/self-rep";
 import Knowledge from "@/pages/knowledge";
 import Procedures from "@/pages/procedures";
+import InmateSearch from "@/pages/inmate-search";
+import PublicRecords from "@/pages/public-records";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 export function App() {
@@ -124,6 +126,22 @@ export function App() {
           element={
             <RequireAuth>
               <Procedures />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/inmate-search"
+          element={
+            <RequireAuth>
+              <InmateSearch />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/public-records"
+          element={
+            <RequireAuth>
+              <PublicRecords />
             </RequireAuth>
           }
         />

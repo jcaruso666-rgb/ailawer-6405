@@ -14,6 +14,8 @@ import {
   Sparkles,
   Gavel,
   UserSearch,
+  Users,
+  FileSearch,
 } from "lucide-react";
 import { siteConfig } from "@/config";
 import { useAuth } from "@/lib/auth";
@@ -49,6 +51,20 @@ export default function Home() {
       description:
         "People search, public records, property lookup, and social media investigation.",
       href: "/osint",
+    },
+    {
+      icon: FileSearch,
+      title: "Public Records Search",
+      description:
+        "Access court records, property deeds, business filings, and vital records by state/county.",
+      href: "/public-records",
+    },
+    {
+      icon: Users,
+      title: "Inmate Search & Locator",
+      description:
+        "Find inmates in state prisons, county jails, and federal facilities nationwide.",
+      href: "/inmate-search",
     },
     {
       icon: Briefcase,
